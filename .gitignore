@@ -1,3 +1,17 @@
+.settings/
+target/
+.classpath/
+.classpath
+.project
+
+.recommender/
+
+.idea
+.idea/
+*/.idea/
+.metadata/
+
+
 /build/
 /coverage/
 /dist/
