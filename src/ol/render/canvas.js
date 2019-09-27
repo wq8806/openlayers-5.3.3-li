@@ -365,7 +365,34 @@ export function drawImage(context,
   if (transform) {
     context.setTransform.apply(context, transform);
   }
+  if (!!context.canvas.needToDraw && x + w * scale > 512) {
+    const offsetX = x + w * scale - 512;
+    const drawObj = {
+      image: image,
+      originX: originX + (w - offsetX),
+      originY: originY,
+      w: offsetX,
+      h: h,
+      x: 0,
+      y: y,
+      width: offsetX,
+      height: h * scale
+    };
+    context.canvas.needToDraw.push(drawObj);
 
+    const xMvt = context.canvas.xMvt;
+    const yMxt = context.canvas.yMvt;
+    const zMvt = context.canvas.zMvt;
+
+    const tileQueue = context.canvas.mvtProvider._tileQueue;
+    const rightTile = tileQueue.findTile(xMvt + 1, yMxt, zMvt, tileQueue);
+    if (!!rightTile) {
+      const ctx = rightTile.getContext('2d');
+      ctx.drawImage(drawObj.image, drawObj.originX, drawObj.originY, drawObj.w, drawObj.h, drawObj.x, drawObj.y, drawObj.width, drawObj.height);
+      // context.canvas.mvtProvider._reloadVectorTile(rightTile);
+      context.canvas.mvtProvider._reload();
+    }
+  }
   context.drawImage(image, originX, originY, w, h, x, y, w * scale, h * scale);
 
   if (alpha) {
