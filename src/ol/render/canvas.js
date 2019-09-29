@@ -390,7 +390,9 @@ export function drawImage(context,
       const ctx = rightTile.getContext('2d');
       ctx.drawImage(drawObj.image, drawObj.originX, drawObj.originY, drawObj.w, drawObj.h, drawObj.x, drawObj.y, drawObj.width, drawObj.height);
       // context.canvas.mvtProvider._reloadVectorTile(rightTile);
-      context.canvas.mvtProvider._reload();
+      if (context.canvas._forceUpdate) {
+        context.canvas.mvtProvider._reload();
+      }
     }
   }
   context.drawImage(image, originX, originY, w, h, x, y, w * scale, h * scale);
